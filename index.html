@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,12 +42,33 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
     }
 
     .splash-video {
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+
+    .video-loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 10;
+    }
+
+    .loading-spinner {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     .skip-button {
@@ -63,6 +83,7 @@
       cursor: pointer;
       backdrop-filter: blur(10px);
       transition: all 0.3s ease;
+      z-index: 10;
     }
 
     .skip-button:hover {
@@ -351,10 +372,20 @@
 <body>
   <!-- Splash Video Screen -->
   <div class="splash-screen" id="splashScreen">
-    <video class="splash-video" id="splashVideo" autoplay muted>
+    <div class="video-loading" id="videoLoading">
+      <div class="loading-spinner">🏍️</div>
+      <p>Loading $GOTO Experience...</p>
+    </div>
+    
+    <video class="splash-video" id="splashVideo" autoplay muted playsinline>
+      <!-- Try multiple video sources and paths -->
+      <source src="videos/gomoto-teaser.mp4" type="video/mp4">
+      <source src="/videos/gomoto-teaser.mp4" type="video/mp4">
+      <source src="gomoto-teaser.mp4" type="video/mp4">
       <source src="/audio/gomoto-teaser.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
+    
     <button class="skip-button" onclick="skipSplash()">Skip Intro</button>
   </div>
 
@@ -384,8 +415,9 @@
 
     <!-- Background Video Section -->
     <section class="background-video-section">
-      <video class="background-video" autoplay muted loop>
-        <source src="/audio/gomoto-teaser.mp4" type="video/mp4">
+      <video class="background-video" autoplay muted loop playsinline>
+        <source src="videos/gomoto-teaser.mp4" type="video/mp4">
+        <source src="/videos/gomoto-teaser.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
       <div class="container video-overlay-content">
@@ -418,6 +450,7 @@
       </div>
     </section>
 
+    <!-- Rest of your content remains the same -->
     <section class="about">
       <div class="container">
         <h3 class="section-title">About $GOTO</h3>
@@ -475,6 +508,33 @@
     const splashScreen = document.getElementById('splashScreen');
     const splashVideo = document.getElementById('splashVideo');
     const mainContent = document.getElementById('mainContent');
+    const videoLoading = document.getElementById('videoLoading');
+
+    // Show loading state
+    splashVideo.style.display = 'none';
+
+    // When video can play, hide loading and show video
+    splashVideo.addEventListener('canplay', function() {
+      videoLoading.style.display = 'none';
+      splashVideo.style.display = 'block';
+      splashVideo.play().catch(e => {
+        console.log('Autoplay failed:', e);
+        videoLoading.innerHTML = 'Click to play video<br><button onclick="playVideo()" style="margin-top: 10px; padding: 10px 20px; background: var(--primary); border: none; border-radius: 25px; color: white; cursor: pointer;">Play Video</button>';
+      });
+    });
+
+    // Video error handling
+    splashVideo.addEventListener('error', function(e) {
+      console.log('Video error:', e);
+      videoLoading.innerHTML = '🚫 Video not found<br><small>Check file path: videos/gomoto-teaser.mp4</small><br><button onclick="skipSplash()" style="margin-top: 10px; padding: 10px 20px; background: var(--secondary); border: none; border-radius: 25px; color: white; cursor: pointer;">Continue to Site</button>';
+    });
+
+    function playVideo() {
+      splashVideo.play().then(() => {
+        videoLoading.style.display = 'none';
+        splashVideo.style.display = 'block';
+      });
+    }
 
     // Auto-hide splash screen when video ends
     splashVideo.addEventListener('ended', function() {
@@ -489,18 +549,25 @@
     function showMainContent() {
       splashScreen.style.display = 'none';
       mainContent.classList.add('visible');
-      
-      // Unmute background video (if you want sound in the background)
-      const bgVideo = document.querySelector('.background-video');
-      bgVideo.muted = true; // Keep muted for better UX
     }
 
-    // Fallback: if video doesn't load, show main content after 8 seconds
+    // Fallback: if video doesn't load, show main content after 5 seconds
     setTimeout(() => {
-      if (splashScreen.style.display !== 'none') {
-        showMainContent();
+      if (splashScreen.style.display !== 'none' && splashVideo.style.display === 'none') {
+        videoLoading.innerHTML = '⏰ Loading main site...';
+        setTimeout(() => showMainContent(), 1000);
       }
-    }, 8000);
+    }, 5000);
   </script>
 </body>
 </html>
+
+
+
+    
+  
+
+
+
+
+ 
