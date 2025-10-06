@@ -30,43 +30,29 @@
       line-height: 1.6;
     }
 
-    /* Splash Screen */
+    /* Simple splash that auto-hides quickly */
     .splash-screen {
       position: fixed;
-      inset: 0;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      background: black;
+      background: #000;
       z-index: 1000;
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      transition: opacity 1s ease;
     }
 
-    .splash-video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: none;
-    }
-
-    .loading-overlay {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background: rgba(0, 0, 0, 0.85);
-      z-index: 2;
+    .splash-content {
+      text-align: center;
     }
 
     .loading-spinner {
-      font-size: 3rem;
+      font-size: 4rem;
+      margin-bottom: 20px;
       animation: spin 2s linear infinite;
-      margin-bottom: 10px;
     }
 
     @keyframes spin {
@@ -74,52 +60,15 @@
       100% { transform: rotate(360deg); }
     }
 
-    .play-button {
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      color: white;
-      border: none;
-      padding: 15px 30px;
-      border-radius: 25px;
-      font-size: 1.2rem;
-      cursor: pointer;
-      margin-top: 20px;
-      transition: all 0.3s ease;
-    }
-
-    .play-button:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 30px rgba(0, 198, 255, 0.6);
-    }
-
-    .skip-button {
-      position: absolute;
-      bottom: 30px;
-      right: 30px;
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 25px;
-      cursor: pointer;
-      backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
-      z-index: 3;
-    }
-
-    .skip-button:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: scale(1.05);
-    }
-
     /* Main content */
     .main-content {
-      display: none;
-      animation: fadeIn 1.2s ease forwards;
+      display: block;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
     }
 
     header {
@@ -194,6 +143,120 @@
       box-shadow: 0 6px 20px rgba(0, 198, 255, 0.4);
     }
 
+    section {
+      padding: 80px 20px;
+    }
+
+    .section-title {
+      font-size: 2.2rem;
+      margin-bottom: 40px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .about-content {
+      max-width: 800px;
+      margin: 0 auto;
+      font-size: 1.1rem;
+      text-align: left;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 30px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-top: 50px;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 30px 20px;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      color: var(--primary);
+    }
+
+    .feature-title {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      color: var(--accent);
+    }
+
+    .roadmap {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 80px 20px;
+    }
+
+    .roadmap-steps {
+      max-width: 800px;
+      margin: 50px auto 0;
+      position: relative;
+    }
+
+    .roadmap-steps::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--primary), var(--secondary));
+      transform: translateX(-50%);
+    }
+
+    .step {
+      display: flex;
+      margin-bottom: 50px;
+      position: relative;
+    }
+
+    .step:nth-child(odd) {
+      flex-direction: row;
+    }
+
+    .step:nth-child(even) {
+      flex-direction: row-reverse;
+    }
+
+    .step-content {
+      flex: 1;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .step-marker {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--primary);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      box-shadow: 0 0 15px var(--primary);
+    }
+
     footer {
       padding: 40px 20px;
       background: rgba(0, 0, 0, 0.5);
@@ -217,91 +280,125 @@
     .social-links a:hover {
       color: var(--primary);
     }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <!-- Splash -->
+  <!-- Simple Splash Screen that auto-hides -->
   <div class="splash-screen" id="splashScreen">
-    <div class="loading-overlay" id="loadingOverlay">
+    <div class="splash-content">
       <div class="loading-spinner">🏍️</div>
-      <h3>GoMotoCoin $GOTO</h3>
-      <p id="statusMessage">Starting your journey...</p>
-      <button class="play-button" id="playButton" style="display: none;">▶ PLAY VIDEO</button>
+      <h2>GoMotoCoin $GOTO</h2>
+      <p>Loading...</p>
     </div>
-
-    <video class="splash-video" id="splashVideo" muted playsinline>
-      <source src="/videos/gomoto-teaser.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-
-    <button class="skip-button" onclick="skipSplash()">Skip Intro</button>
   </div>
 
   <!-- Main Content -->
   <div class="main-content" id="mainContent">
     <header>
-      <div class="moto-icon">🏍️</div>
-      <h2>🚀 GoMotoCoin Launch</h2>
-      <h1>GoMotoCoin ($GOTO)</h1>
-      <p class="tagline">The token for riders, dreamers, and movers 🛵✨<br>Built for fun, speed, and community 🚀</p>
+      <div class="container">
+        <div class="moto-icon">🏍️</div>
+        <h2>🚀 GoMotoCoin Launch</h2>
+        <h1>GoMotoCoin ($GOTO)</h1>
+        <p class="tagline">The token for riders, dreamers, and movers 🛵✨<br>
+        Built for fun, speed, and community 🚀</p>
 
-      <div class="buttons">
-        <a href="https://pump.fun/coin/H9RqBqTRGFjYKe2Pgxr1z8qKTo94oaeVnPVxaQUjpump" target="_blank" class="btn btn-primary">
-          <i class="fas fa-coins"></i> Buy on Pump.fun
-        </a>
-        <a href="https://x.com/GoMotoCoin" target="_blank" class="btn">
-          <i class="fab fa-twitter"></i> Follow on X
-        </a>
-        <a href="https://t.me/GoMotoCoinOfficial" target="_blank" class="btn">
-          <i class="fab fa-telegram"></i> Join Telegram
-        </a>
+        <div class="buttons">
+          <a href="https://pump.fun/coin/H9RqBqTRGFjYKe2Pgxr1z8qKTo94oaeVnPVxaQUjpump" target="_blank" class="btn btn-primary">
+            <i class="fas fa-coins"></i> Buy on Pump.fun
+          </a>
+          <a href="https://x.com/GoMotoCoin" target="_blank" class="btn">
+            <i class="fab fa-twitter"></i> Follow on X
+          </a>
+          <a href="https://t.me/GoMotoCoinOfficial" target="_blank" class="btn">
+            <i class="fab fa-telegram"></i> Join Telegram
+          </a>
+        </div>
       </div>
     </header>
+
+    <section class="about">
+      <div class="container">
+        <h3 class="section-title">About $GOTO</h3>
+        <div class="about-content">
+          <p>
+            GoMotoCoin ($GOTO) is a community-driven token inspired by motion, connection, and speed.
+            We're building an ecosystem that celebrates fun, transparency, and the thrill of the ride. 🏍️  
+            Join our growing community of riders and dreamers on Solana — and let's race to the moon together! 🌙
+          </p>
+        </div>
+        
+        <div class="features">
+          <div class="feature-card">
+            <div class="feature-icon">🚀</div>
+            <h4 class="feature-title">Fast & Efficient</h4>
+            <p>Built on Solana for lightning-fast transactions and low fees.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">👥</div>
+            <h4 class="feature-title">Community Driven</h4>
+            <p>Our community is at the heart of everything we do.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🛣️</div>
+            <h4 class="feature-title">Roadmap</h4>
+            <p>Clear vision and exciting milestones ahead.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="roadmap">
+      <div class="container">
+        <h3 class="section-title">Roadmap</h3>
+        <div class="roadmap-steps">
+          <div class="step">
+            <div class="step-marker"></div>
+            <div class="step-content">
+              <h4>Phase 1: Launch</h4>
+              <p>Token creation, website launch, and initial community building.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-marker"></div>
+            <div class="step-content">
+              <h4>Phase 2: Growth</h4>
+              <p>Marketing campaigns, CMC/CG listings, and community expansion.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-marker"></div>
+            <div class="step-content">
+              <h4>Phase 3: Ecosystem</h4>
+              <p>Partnerships, merchandise, and utility development.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <p>© 2025 GoMotoCoin. All rights reserved.</p>
+        <div class="social-links">
+          <a href="https://x.com/GoMotoCoin" target="_blank"><i class="fab fa-twitter"></i></a>
+          <a href="https://t.me/GoMotoCoinOfficial" target="_blank"><i class="fab fa-telegram"></i></a>
+        </div>
+      </div>
+    </footer>
   </div>
 
   <script>
-    const splashScreen = document.getElementById('splashScreen');
-    const splashVideo = document.getElementById('splashVideo');
-    const mainContent = document.getElementById('mainContent');
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    const statusMessage = document.getElementById('statusMessage');
-    const playButton = document.getElementById('playButton');
-
-    splashVideo.addEventListener('canplay', () => {
-      statusMessage.textContent = 'Ready to roll!';
-      splashVideo.play().then(() => {
-        loadingOverlay.style.display = 'none';
-        splashVideo.style.display = 'block';
-      }).catch(() => {
-        playButton.style.display = 'block';
-        statusMessage.textContent = 'Tap to start the video';
-      });
-    });
-
-    splashVideo.addEventListener('ended', fadeOutSplash);
-
-    playButton.addEventListener('click', () => {
-      splashVideo.play();
-      loadingOverlay.style.display = 'none';
-      splashVideo.style.display = 'block';
-    });
-
-    function skipSplash() {
-      fadeOutSplash();
-    }
-
-    function fadeOutSplash() {
-      splashScreen.style.opacity = '0';
-      setTimeout(() => {
-        splashScreen.style.display = 'none';
-        mainContent.style.display = 'block';
-      }, 1000);
-    }
-
-    // Safety fallback
+    // Simple splash screen that hides after 2 seconds
     setTimeout(() => {
-      if (splashScreen.style.display !== 'none') fadeOutSplash();
-    }, 10000);
+      document.getElementById('splashScreen').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+    }, 2000);
   </script>
 </body>
 </html>
