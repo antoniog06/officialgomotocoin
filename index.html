@@ -1,5 +1,5 @@
 
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -43,12 +43,70 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
     }
 
     .splash-video {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      border: 2px solid #00c6ff;
+    }
+
+    .debug-info {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(255, 0, 0, 0.9);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      font-family: monospace;
+      font-size: 12px;
+      z-index: 1002;
+      max-width: 300px;
+    }
+
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1001;
+    }
+
+    .loading-spinner {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .play-button {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 25px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .play-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 30px rgba(0, 198, 255, 0.6);
     }
 
     .skip-button {
@@ -71,7 +129,7 @@
       transform: scale(1.05);
     }
 
-    /* Main Content */
+    /* Main Content - Initially Hidden */
     .main-content {
       display: none;
     }
@@ -301,22 +359,42 @@
     .social-links a:hover {
       color: var(--primary);
     }
+    
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+      
+      .debug-info {
+        font-size: 10px;
+        max-width: 200px;
+      }
+    }
   </style>
 </head>
 <body>
   <!-- Splash Video Screen -->
   <div class="splash-screen" id="splashScreen">
-    <!-- USING THE WORKING FULL URL APPROACH -->
-    <video class="splash-video" id="splashVideo" autoplay muted playsinline>
-      <source src="https://officialgomotocoin.vercel.app/videos/gomoto-teaser.mp4" type="video/mp4">
+    <div class="debug-info" id="debugInfo">Loading...</div>
+    
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-spinner">🏍️</div>
+      <h3>GoMotoCoin $GOTO</h3>
+      <p id="statusMessage">Starting your journey...</p>
+      <button class="play-button" id="playButton" style="display: none;">▶ PLAY VIDEO</button>
+    </div>
+
+    <video class="splash-video" id="splashVideo" muted playsinline style="display: none;">
+      <source src="/videos/gomoto-teaser.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
+    
     <button class="skip-button" onclick="skipSplash()">Skip Intro</button>
   </div>
 
   <!-- Main Content -->
   <div class="main-content" id="mainContent">
-    <!-- Your existing content -->
+    <!-- Your existing website content -->
     <header>
       <div class="container">
         <div class="moto-icon">🏍️</div>
@@ -339,6 +417,19 @@
       </div>
     </header>
 
+    <section class="about">
+      <div class="container">
+        <h3 class="section-title">About $GOTO</h3>
+        <div class="about-content">
+          <p>
+            GoMotoCoin ($GOTO) is a community-driven token inspired by motion, connection, and speed.
+            We're building an ecosystem that celebrates fun, transparency, and the thrill of the ride. 🏍️  
+            Join our growing community of riders and dreamers on Solana — and let's race to the moon together! 🌙
+          </p>
+        </div>
+      </div>
+    </section>
+
     <!-- Rest of your content -->
   </div>
 
@@ -346,12 +437,76 @@
     const splashScreen = document.getElementById('splashScreen');
     const splashVideo = document.getElementById('splashVideo');
     const mainContent = document.getElementById('mainContent');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const statusMessage = document.getElementById('statusMessage');
+    const playButton = document.getElementById('playButton');
+    const debugInfo = document.getElementById('debugInfo');
 
-    splashVideo.addEventListener('ended', function() {
+    function updateDebug(message) {
+      debugInfo.textContent = message;
+      console.log('DEBUG:', message);
+    }
+
+    function updateStatus(message) {
+      statusMessage.textContent = message;
+    }
+
+    // Video event listeners
+    splashVideo.addEventListener('loadstart', () => {
+      updateDebug('Video load started');
+      updateStatus('Loading video...');
+    });
+
+    splashVideo.addEventListener('loadeddata', () => {
+      updateDebug('Video data loaded');
+      updateStatus('Video ready!');
+    });
+
+    splashVideo.addEventListener('canplay', () => {
+      updateDebug('Video can play - attempting autoplay');
+      
+      // Try to autoplay
+      splashVideo.play().then(() => {
+        updateDebug('Autoplay SUCCESS! Video playing');
+        loadingOverlay.style.display = 'none';
+        splashVideo.style.display = 'block';
+      }).catch(error => {
+        updateDebug('Autoplay BLOCKED: ' + error);
+        updateStatus('Click play to start');
+        playButton.style.display = 'block';
+      });
+    });
+
+    splashVideo.addEventListener('playing', () => {
+      updateDebug('Video is now PLAYING');
+    });
+
+    splashVideo.addEventListener('error', (e) => {
+      updateDebug('Video ERROR: ' + e.target.error.code);
+      updateStatus('Video failed to load');
+      playButton.style.display = 'none';
+      
+      // Show main content after error
+      setTimeout(() => skipSplash(), 2000);
+    });
+
+    splashVideo.addEventListener('ended', () => {
+      updateDebug('Video ended - showing main content');
       showMainContent();
     });
 
+    // Manual play function
+    playButton.addEventListener('click', () => {
+      splashVideo.play().then(() => {
+        loadingOverlay.style.display = 'none';
+        splashVideo.style.display = 'block';
+        playButton.style.display = 'none';
+      });
+    });
+
+    // Skip function
     function skipSplash() {
+      updateDebug('Skipping to main content');
       showMainContent();
     }
 
@@ -360,12 +515,20 @@
       mainContent.classList.add('visible');
     }
 
-    // Fallback
+    // Start loading the video
+    updateDebug('Page loaded - starting video');
+    splashVideo.load();
+
+    // Final fallback
     setTimeout(() => {
       if (splashScreen.style.display !== 'none') {
-        showMainContent();
+        updateDebug('Fallback timeout - forcing continue');
+        skipSplash();
       }
-    }, 5000);
+    }, 8000);
+
+    // Initial status
+    updateDebug('Script started');
   </script>
 </body>
 </html>
