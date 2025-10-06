@@ -230,7 +230,8 @@
     </div>
 
     <video class="splash-video" id="splashVideo" muted playsinline>
-      <source src="/videos/gomoto-teaser.mp4" type="video/mp4">
+      <!-- CHANGED TO FULL URL THAT WORKS -->
+      <source src="https://officialgomotocoin.vercel.app/videos/gomoto-teaser.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
 
@@ -267,23 +268,43 @@
     const statusMessage = document.getElementById('statusMessage');
     const playButton = document.getElementById('playButton');
 
+    // Enhanced event listeners with better error handling
+    splashVideo.addEventListener('loadstart', () => {
+      statusMessage.textContent = 'Loading video...';
+    });
+
     splashVideo.addEventListener('canplay', () => {
       statusMessage.textContent = 'Ready to roll!';
       splashVideo.play().then(() => {
         loadingOverlay.style.display = 'none';
         splashVideo.style.display = 'block';
-      }).catch(() => {
+      }).catch((error) => {
+        console.log('Autoplay blocked:', error);
         playButton.style.display = 'block';
         statusMessage.textContent = 'Tap to start the video';
       });
     });
 
+    splashVideo.addEventListener('playing', () => {
+      console.log('Video is now playing!');
+    });
+
+    splashVideo.addEventListener('error', (e) => {
+      console.error('Video error:', e);
+      statusMessage.textContent = 'Video failed to load';
+      playButton.style.display = 'none';
+      // Auto-skip after error
+      setTimeout(fadeOutSplash, 2000);
+    });
+
     splashVideo.addEventListener('ended', fadeOutSplash);
 
     playButton.addEventListener('click', () => {
-      splashVideo.play();
-      loadingOverlay.style.display = 'none';
-      splashVideo.style.display = 'block';
+      splashVideo.play().then(() => {
+        loadingOverlay.style.display = 'none';
+        splashVideo.style.display = 'block';
+        playButton.style.display = 'none';
+      });
     });
 
     function skipSplash() {
@@ -298,10 +319,16 @@
       }, 1000);
     }
 
-    // Safety fallback
+    // Start loading the video immediately
+    splashVideo.load();
+
+    // Safety fallback - if nothing happens in 8 seconds
     setTimeout(() => {
-      if (splashScreen.style.display !== 'none') fadeOutSplash();
-    }, 10000);
+      if (splashScreen.style.display !== 'none') {
+        console.log('Fallback triggered - showing main content');
+        fadeOutSplash();
+      }
+    }, 8000);
   </script>
 </body>
 </html>
