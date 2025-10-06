@@ -53,7 +53,18 @@
       object-fit: cover;
     }
 
-    .video-loading {
+    .video-debug {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(255, 0, 0, 0.8);
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      z-index: 1001;
+    }
+
+    .loading-container {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -65,7 +76,7 @@
     .loading-spinner {
       font-size: 3rem;
       margin-bottom: 20px;
-      animation: spin 1s linear infinite;
+      animation: spin 2s linear infinite;
     }
 
     @keyframes spin {
@@ -85,7 +96,7 @@
       cursor: pointer;
       backdrop-filter: blur(10px);
       transition: all 0.3s ease;
-      z-index: 10;
+      z-index: 1001;
     }
 
     .skip-button:hover {
@@ -93,14 +104,36 @@
       transform: scale(1.05);
     }
 
-    /* Main Content - Initially Hidden */
+    .play-button {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 25px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .play-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(0, 198, 255, 0.6);
+    }
+
+    /* Main Content */
     .main-content {
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
+      display: none;
     }
 
     .main-content.visible {
-      opacity: 1;
+      display: block;
+      animation: fadeIn 1s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
     
     .container {
@@ -295,29 +328,6 @@
       box-shadow: 0 0 15px var(--primary);
     }
     
-    /* Background Video Section */
-    .background-video-section {
-      position: relative;
-      padding: 100px 20px;
-      overflow: hidden;
-    }
-
-    .background-video {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -1;
-      opacity: 0.3;
-    }
-
-    .video-overlay-content {
-      position: relative;
-      z-index: 2;
-    }
-    
     footer {
       padding: 40px 20px;
       background: rgba(0, 0, 0, 0.5);
@@ -347,22 +357,6 @@
         font-size: 2.5rem;
       }
       
-      .roadmap-steps::before {
-        left: 30px;
-      }
-      
-      .step {
-        flex-direction: row !important;
-      }
-      
-      .step-marker {
-        left: 30px;
-      }
-      
-      .step-content {
-        margin-left: 50px;
-      }
-
       .skip-button {
         bottom: 20px;
         right: 20px;
@@ -374,17 +368,19 @@
 <body>
   <!-- Splash Video Screen -->
   <div class="splash-screen" id="splashScreen">
-    <div class="video-loading" id="videoLoading">
-      <div class="loading-spinner">🏍️</div>
-      <p>Loading $GOTO Experience...</p>
-    </div>
+    <div class="video-debug" id="videoDebug">Status: Loading...</div>
     
-    <video class="splash-video" id="splashVideo" autoplay muted playsinline>
-      <!-- Try multiple video sources and paths -->
+    <div class="loading-container" id="loadingContainer">
+      <div class="loading-spinner">🏍️</div>
+      <h3>Loading $GOTO Experience</h3>
+      <p id="statusText">Preparing your journey...</p>
+      <button class="play-button" onclick="manualPlayVideo()" id="playButton" style="display: none;">
+        ▶ Play Video
+      </button>
+    </div>
+
+    <video class="splash-video" id="splashVideo" muted playsinline style="display: none;">
       <source src="videos/gomoto-teaser.mp4" type="video/mp4">
-      <source src="/videos/gomoto-teaser.mp4" type="video/mp4">
-      <source src="gomoto-teaser.mp4" type="video/mp4">
-      <source src="/audio/gomoto-teaser.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
     
@@ -393,6 +389,7 @@
 
   <!-- Main Content -->
   <div class="main-content" id="mainContent">
+    <!-- Your existing website content here -->
     <header>
       <div class="container">
         <div class="moto-icon">🏍️</div>
@@ -415,44 +412,6 @@
       </div>
     </header>
 
-    <!-- Background Video Section -->
-    <section class="background-video-section">
-      <video class="background-video" autoplay muted loop playsinline>
-        <source src="videos/gomoto-teaser.mp4" type="video/mp4">
-        <source src="/videos/gomoto-teaser.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-      <div class="container video-overlay-content">
-        <h3 class="section-title">Experience The Ride! 🏍️</h3>
-        <div class="about-content">
-          <p>
-            <strong>GoMotoCoin ($GOTO)</strong> is more than just a token - it's a movement! 
-            Feel the adrenaline as we revolutionize the crypto space with speed, transparency, 
-            and community-driven innovation. Join us on this exciting journey to the moon! 🚀
-          </p>
-        </div>
-        
-        <div class="features">
-          <div class="feature-card">
-            <div class="feature-icon">⚡</div>
-            <h4 class="feature-title">Lightning Fast</h4>
-            <p>Solana-powered transactions at warp speed</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon">🔒</div>
-            <h4 class="feature-title">Secure & Safe</h4>
-            <p>Transparent operations with locked liquidity</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon">🌙</div>
-            <h4 class="feature-title">Moon Mission</h4>
-            <p>Clear roadmap to success and beyond</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Rest of your content remains the same -->
     <section class="about">
       <div class="container">
         <h3 class="section-title">About $GOTO</h3>
@@ -466,85 +425,82 @@
       </div>
     </section>
 
-    <section class="roadmap">
-      <div class="container">
-        <h3 class="section-title">Roadmap</h3>
-        <div class="roadmap-steps">
-          <div class="step">
-            <div class="step-marker"></div>
-            <div class="step-content">
-              <h4>Phase 1: Launch</h4>
-              <p>Token creation, website launch, and initial community building.</p>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-marker"></div>
-            <div class="step-content">
-              <h4>Phase 2: Growth</h4>
-              <p>Marketing campaigns, CMC/CG listings, and community expansion.</p>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-marker"></div>
-            <div class="step-content">
-              <h4>Phase 3: Ecosystem</h4>
-              <p>Partnerships, merchandise, and utility development.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <footer>
-      <div class="container">
-        <p>© 2025 GoMotoCoin. All rights reserved.</p>
-        <div class="social-links">
-          <a href="https://x.com/GoMotoCoin" target="_blank"><i class="fab fa-twitter"></i></a>
-          <a href="https://t.me/GoMotoCoinOfficial" target="_blank"><i class="fab fa-telegram"></i></a>
-        </div>
-      </div>
-    </footer>
+    <!-- Rest of your content -->
   </div>
 
   <script>
     const splashScreen = document.getElementById('splashScreen');
     const splashVideo = document.getElementById('splashVideo');
     const mainContent = document.getElementById('mainContent');
-    const videoLoading = document.getElementById('videoLoading');
+    const loadingContainer = document.getElementById('loadingContainer');
+    const statusText = document.getElementById('statusText');
+    const playButton = document.getElementById('playButton');
+    const videoDebug = document.getElementById('videoDebug');
 
-    // Show loading state
-    splashVideo.style.display = 'none';
+    let videoLoaded = false;
 
-    // When video can play, hide loading and show video
+    // Update debug info
+    function updateDebug(message) {
+      videoDebug.textContent = `Status: ${message}`;
+      console.log('Video Debug:', message);
+    }
+
+    // When video metadata is loaded
+    splashVideo.addEventListener('loadedmetadata', function() {
+      updateDebug('Video metadata loaded');
+      statusText.textContent = 'Video ready! Starting...';
+    });
+
+    // When video can play
     splashVideo.addEventListener('canplay', function() {
-      videoLoading.style.display = 'none';
-      splashVideo.style.display = 'block';
-      splashVideo.play().catch(e => {
-        console.log('Autoplay failed:', e);
-        videoLoading.innerHTML = 'Click to play video<br><button onclick="playVideo()" style="margin-top: 10px; padding: 10px 20px; background: var(--primary); border: none; border-radius: 25px; color: white; cursor: pointer;">Play Video</button>';
+      updateDebug('Video can play');
+      videoLoaded = true;
+      
+      // Try to autoplay
+      splashVideo.play().then(() => {
+        updateDebug('Autoplay successful');
+        loadingContainer.style.display = 'none';
+        splashVideo.style.display = 'block';
+      }).catch(error => {
+        updateDebug('Autoplay blocked - user interaction required');
+        statusText.textContent = 'Click play to start the experience';
+        playButton.style.display = 'block';
       });
     });
 
     // Video error handling
     splashVideo.addEventListener('error', function(e) {
-      console.log('Video error:', e);
-      videoLoading.innerHTML = '🚫 Video not found<br><small>Check file path: videos/gomoto-teaser.mp4</small><br><button onclick="skipSplash()" style="margin-top: 10px; padding: 10px 20px; background: var(--secondary); border: none; border-radius: 25px; color: white; cursor: pointer;">Continue to Site</button>';
+      updateDebug('Video error - file not found or corrupted');
+      statusText.innerHTML = '🚫 Video file not found<br><small>Make sure "videos/gomoto-teaser.mp4" exists</small>';
+      playButton.style.display = 'none';
+      
+      // Auto-continue after 3 seconds if video fails
+      setTimeout(() => {
+        updateDebug('Auto-continuing due to video error');
+        skipSplash();
+      }, 3000);
     });
 
-    function playVideo() {
-      splashVideo.play().then(() => {
-        videoLoading.style.display = 'none';
-        splashVideo.style.display = 'block';
-      });
-    }
-
-    // Auto-hide splash screen when video ends
+    // Video ended
     splashVideo.addEventListener('ended', function() {
+      updateDebug('Video ended - showing main content');
       showMainContent();
     });
 
-    // Manual skip function
+    // Manual play function
+    function manualPlayVideo() {
+      splashVideo.play().then(() => {
+        loadingContainer.style.display = 'none';
+        splashVideo.style.display = 'block';
+        playButton.style.display = 'none';
+      }).catch(error => {
+        updateDebug('Manual play failed: ' + error);
+      });
+    }
+
+    // Skip function
     function skipSplash() {
+      updateDebug('Skipping splash screen');
       showMainContent();
     }
 
@@ -553,13 +509,17 @@
       mainContent.classList.add('visible');
     }
 
-    // Fallback: if video doesn't load, show main content after 5 seconds
+    // Final fallback - if nothing happens in 6 seconds, continue
     setTimeout(() => {
-      if (splashScreen.style.display !== 'none' && splashVideo.style.display === 'none') {
-        videoLoading.innerHTML = '⏰ Loading main site...';
-        setTimeout(() => showMainContent(), 1000);
+      if (splashScreen.style.display !== 'none') {
+        updateDebug('Fallback timeout - showing main content');
+        skipSplash();
       }
-    }, 5000);
+    }, 6000);
+
+    // Initial load
+    updateDebug('Page loaded - starting video load');
+    splashVideo.load();
   </script>
 </body>
 </html>
