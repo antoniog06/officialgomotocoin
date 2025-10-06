@@ -14,13 +14,13 @@
       --dark-blue: #0a0f3d;
       --dark-gray: #141414;
     }
-
+    
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-
+    
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(135deg, var(--dark), var(--dark-blue), var(--dark-gray));
@@ -30,43 +30,60 @@
       line-height: 1.6;
     }
 
-    /* Splash Screen */
+    /* Splash Video Screen */
     .splash-screen {
       position: fixed;
-      inset: 0;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      background: black;
+      background: #000;
       z-index: 1000;
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      transition: opacity 1s ease;
     }
 
     .splash-video {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: none;
+      border: 2px solid #00c6ff;
+    }
+
+    .debug-info {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(255, 0, 0, 0.9);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      font-family: monospace;
+      font-size: 12px;
+      z-index: 1002;
+      max-width: 300px;
     }
 
     .loading-overlay {
       position: absolute;
-      inset: 0;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      background: rgba(0, 0, 0, 0.85);
-      z-index: 2;
+      z-index: 1001;
     }
 
     .loading-spinner {
       font-size: 3rem;
+      margin-bottom: 20px;
       animation: spin 2s linear infinite;
-      margin-bottom: 10px;
     }
 
     @keyframes spin {
@@ -103,7 +120,7 @@
       cursor: pointer;
       backdrop-filter: blur(10px);
       transition: all 0.3s ease;
-      z-index: 3;
+      z-index: 1001;
     }
 
     .skip-button:hover {
@@ -111,33 +128,43 @@
       transform: scale(1.05);
     }
 
-    /* Main content */
+    /* Main Content - Initially Hidden */
     .main-content {
       display: none;
-      animation: fadeIn 1.2s ease forwards;
+    }
+
+    .main-content.visible {
+      display: block;
+      animation: fadeIn 1s ease-in;
     }
 
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
-
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
     header {
       padding: 100px 20px 60px;
       position: relative;
     }
-
+    
     .moto-icon {
       font-size: 4rem;
       margin-bottom: 20px;
       animation: float 3s ease-in-out infinite;
     }
-
+    
     @keyframes float {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-10px); }
     }
-
+    
     h1 {
       font-size: 3.5rem;
       margin: 10px 0;
@@ -146,21 +173,21 @@
       -webkit-text-fill-color: transparent;
       text-shadow: 0 0 20px rgba(0, 198, 255, 0.3);
     }
-
+    
     h2 {
       color: var(--accent);
       font-size: 1.5rem;
       margin-bottom: 20px;
       font-weight: 500;
     }
-
+    
     .tagline {
       font-size: 1.2rem;
       max-width: 600px;
       margin: 0 auto 30px;
       opacity: 0.9;
     }
-
+    
     .buttons {
       margin-top: 40px;
       display: flex;
@@ -168,7 +195,7 @@
       justify-content: center;
       gap: 15px;
     }
-
+    
     .btn {
       display: inline-flex;
       align-items: center;
@@ -183,45 +210,172 @@
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
-
+    
     .btn-primary {
       background: linear-gradient(90deg, var(--primary), var(--secondary));
       box-shadow: 0 4px 15px rgba(0, 198, 255, 0.3);
     }
-
+    
     .btn:hover {
       transform: translateY(-3px);
       box-shadow: 0 6px 20px rgba(0, 198, 255, 0.4);
     }
-
+    
+    section {
+      padding: 80px 20px;
+    }
+    
+    .section-title {
+      font-size: 2.2rem;
+      margin-bottom: 40px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .about-content {
+      max-width: 800px;
+      margin: 0 auto;
+      font-size: 1.1rem;
+      text-align: left;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 30px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-top: 50px;
+    }
+    
+    .feature-card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 30px 20px;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: transform 0.3s ease;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      color: var(--primary);
+    }
+    
+    .feature-title {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      color: var(--accent);
+    }
+    
+    .roadmap {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 80px 20px;
+    }
+    
+    .roadmap-steps {
+      max-width: 800px;
+      margin: 50px auto 0;
+      position: relative;
+    }
+    
+    .roadmap-steps::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--primary), var(--secondary));
+      transform: translateX(-50%);
+    }
+    
+    .step {
+      display: flex;
+      margin-bottom: 50px;
+      position: relative;
+    }
+    
+    .step:nth-child(odd) {
+      flex-direction: row;
+    }
+    
+    .step:nth-child(even) {
+      flex-direction: row-reverse;
+    }
+    
+    .step-content {
+      flex: 1;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .step-marker {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--primary);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      box-shadow: 0 0 15px var(--primary);
+    }
+    
     footer {
       padding: 40px 20px;
       background: rgba(0, 0, 0, 0.5);
       font-size: 0.9rem;
       opacity: 0.8;
     }
-
+    
     .social-links {
       display: flex;
       justify-content: center;
       gap: 20px;
       margin-top: 20px;
     }
-
+    
     .social-links a {
       color: white;
       font-size: 1.5rem;
       transition: color 0.3s ease;
     }
-
+    
     .social-links a:hover {
       color: var(--primary);
+    }
+    
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+      
+      .debug-info {
+        font-size: 10px;
+        max-width: 200px;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- Splash -->
+  <!-- Splash Video Screen -->
   <div class="splash-screen" id="splashScreen">
+    <div class="debug-info" id="debugInfo">Loading...</div>
+    
     <div class="loading-overlay" id="loadingOverlay">
       <div class="loading-spinner">🏍️</div>
       <h3>GoMotoCoin $GOTO</h3>
@@ -229,35 +383,53 @@
       <button class="play-button" id="playButton" style="display: none;">▶ PLAY VIDEO</button>
     </div>
 
-    <video class="splash-video" id="splashVideo" muted playsinline>
-      <!-- CHANGED TO FULL URL THAT WORKS -->
-      <source src="https://officialgomotocoin.vercel.app/videos/gomoto-teaser.mp4" type="video/mp4">
+    <video class="splash-video" id="splashVideo" muted playsinline style="display: none;">
+      <source src="/videos/gomoto-teaser.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
-
+    
     <button class="skip-button" onclick="skipSplash()">Skip Intro</button>
   </div>
 
   <!-- Main Content -->
   <div class="main-content" id="mainContent">
+    <!-- Your existing website content -->
     <header>
-      <div class="moto-icon">🏍️</div>
-      <h2>🚀 GoMotoCoin Launch</h2>
-      <h1>GoMotoCoin ($GOTO)</h1>
-      <p class="tagline">The token for riders, dreamers, and movers 🛵✨<br>Built for fun, speed, and community 🚀</p>
+      <div class="container">
+        <div class="moto-icon">🏍️</div>
+        <h2>🚀 GoMotoCoin Launch</h2>
+        <h1>GoMotoCoin ($GOTO)</h1>
+        <p class="tagline">The token for riders, dreamers, and movers 🛵✨<br>
+        Built for fun, speed, and community 🚀</p>
 
-      <div class="buttons">
-        <a href="https://pump.fun/coin/H9RqBqTRGFjYKe2Pgxr1z8qKTo94oaeVnPVxaQUjpump" target="_blank" class="btn btn-primary">
-          <i class="fas fa-coins"></i> Buy on Pump.fun
-        </a>
-        <a href="https://x.com/GoMotoCoin" target="_blank" class="btn">
-          <i class="fab fa-twitter"></i> Follow on X
-        </a>
-        <a href="https://t.me/GoMotoCoinOfficial" target="_blank" class="btn">
-          <i class="fab fa-telegram"></i> Join Telegram
-        </a>
+        <div class="buttons">
+          <a href="https://pump.fun/coin/H9RqBqTRGFjYKe2Pgxr1z8qKTo94oaeVnPVxaQUjpump" target="_blank" class="btn btn-primary">
+            <i class="fas fa-coins"></i> Buy on Pump.fun
+          </a>
+          <a href="https://x.com/GoMotoCoin" target="_blank" class="btn">
+            <i class="fab fa-twitter"></i> Follow on X
+          </a>
+          <a href="https://t.me/GoMotoCoinOfficial" target="_blank" class="btn">
+            <i class="fab fa-telegram"></i> Join Telegram
+          </a>
+        </div>
       </div>
     </header>
+
+    <section class="about">
+      <div class="container">
+        <h3 class="section-title">About $GOTO</h3>
+        <div class="about-content">
+          <p>
+            GoMotoCoin ($GOTO) is a community-driven token inspired by motion, connection, and speed.
+            We're building an ecosystem that celebrates fun, transparency, and the thrill of the ride. 🏍️  
+            Join our growing community of riders and dreamers on Solana — and let's race to the moon together! 🌙
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Rest of your content -->
   </div>
 
   <script>
@@ -267,38 +439,62 @@
     const loadingOverlay = document.getElementById('loadingOverlay');
     const statusMessage = document.getElementById('statusMessage');
     const playButton = document.getElementById('playButton');
+    const debugInfo = document.getElementById('debugInfo');
 
-    // Enhanced event listeners with better error handling
+    function updateDebug(message) {
+      debugInfo.textContent = message;
+      console.log('DEBUG:', message);
+    }
+
+    function updateStatus(message) {
+      statusMessage.textContent = message;
+    }
+
+    // Video event listeners
     splashVideo.addEventListener('loadstart', () => {
-      statusMessage.textContent = 'Loading video...';
+      updateDebug('Video load started');
+      updateStatus('Loading video...');
+    });
+
+    splashVideo.addEventListener('loadeddata', () => {
+      updateDebug('Video data loaded');
+      updateStatus('Video ready!');
     });
 
     splashVideo.addEventListener('canplay', () => {
-      statusMessage.textContent = 'Ready to roll!';
+      updateDebug('Video can play - attempting autoplay');
+      
+      // Try to autoplay
       splashVideo.play().then(() => {
+        updateDebug('Autoplay SUCCESS! Video playing');
         loadingOverlay.style.display = 'none';
         splashVideo.style.display = 'block';
-      }).catch((error) => {
-        console.log('Autoplay blocked:', error);
+      }).catch(error => {
+        updateDebug('Autoplay BLOCKED: ' + error);
+        updateStatus('Click play to start');
         playButton.style.display = 'block';
-        statusMessage.textContent = 'Tap to start the video';
       });
     });
 
     splashVideo.addEventListener('playing', () => {
-      console.log('Video is now playing!');
+      updateDebug('Video is now PLAYING');
     });
 
     splashVideo.addEventListener('error', (e) => {
-      console.error('Video error:', e);
-      statusMessage.textContent = 'Video failed to load';
+      updateDebug('Video ERROR: ' + e.target.error.code);
+      updateStatus('Video failed to load');
       playButton.style.display = 'none';
-      // Auto-skip after error
-      setTimeout(fadeOutSplash, 2000);
+      
+      // Show main content after error
+      setTimeout(() => skipSplash(), 2000);
     });
 
-    splashVideo.addEventListener('ended', fadeOutSplash);
+    splashVideo.addEventListener('ended', () => {
+      updateDebug('Video ended - showing main content');
+      showMainContent();
+    });
 
+    // Manual play function
     playButton.addEventListener('click', () => {
       splashVideo.play().then(() => {
         loadingOverlay.style.display = 'none';
@@ -307,28 +503,31 @@
       });
     });
 
+    // Skip function
     function skipSplash() {
-      fadeOutSplash();
+      updateDebug('Skipping to main content');
+      showMainContent();
     }
 
-    function fadeOutSplash() {
-      splashScreen.style.opacity = '0';
-      setTimeout(() => {
-        splashScreen.style.display = 'none';
-        mainContent.style.display = 'block';
-      }, 1000);
+    function showMainContent() {
+      splashScreen.style.display = 'none';
+      mainContent.classList.add('visible');
     }
 
-    // Start loading the video immediately
+    // Start loading the video
+    updateDebug('Page loaded - starting video');
     splashVideo.load();
 
-    // Safety fallback - if nothing happens in 8 seconds
+    // Final fallback
     setTimeout(() => {
       if (splashScreen.style.display !== 'none') {
-        console.log('Fallback triggered - showing main content');
-        fadeOutSplash();
+        updateDebug('Fallback timeout - forcing continue');
+        skipSplash();
       }
     }, 8000);
+
+    // Initial status
+    updateDebug('Script started');
   </script>
 </body>
 </html>
